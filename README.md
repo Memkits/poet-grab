@@ -1,8 +1,8 @@
 
-Poet grab
+Poet grab(TODO...)
 ----
 
-> Tiny for grabbing sentences from poets.
+> Toy for grabbing sentences from poets.
 
 ### Usage
 
