@@ -8,6 +8,10 @@ Poet grab(TODO...)
 
 Use Calcit 0.27.0, Node.js 24, and Yarn 4.18.0:
 
+Keep `calcit.cirru` and `deps.cirru` as the canonical source and dependency
+files. Do not restore the retired `compact.cirru` or `package.cirru`; CI checks
+that both canonical files exist and both retired files are absent.
+
 ```bash
 caps --ci
 yarn install --immutable
