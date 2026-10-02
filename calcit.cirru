@@ -3,9 +3,9 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |app
   :entries $ {} $ :default
-    {} (:description |) (:init-fn 'app.main/main!) (:mode :native) (:reload-fn 'app.main/reload!) (:target :browser)
+    {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
-      :modules $ [] |respo.calcit/ |respo-ui.calcit/ |reel.calcit/ |respo-markdown.calcit/ |js-ffi/
+      :modules $ [] |respo.calcit/ |respo-ui.calcit/ |reel.calcit/ |js-ffi/
       :type-slots $ {}
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
@@ -41,13 +41,12 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require
-            [] respo-ui.core :refer $ [] hsl
-            [] respo-ui.core :as ui
-            [] respo.core :refer $ [] defcomp >> <> div button textarea span
-            [] respo.comp.space :refer $ [] =<
-            [] reel.comp.reel :refer $ [] comp-reel
-            [] respo-md.comp.md :refer $ [] comp-md
-            [] app.config :refer $ [] dev?
+            respo-ui.core :refer $ [] hsl
+            respo-ui.core :as ui
+            respo.core :refer $ [] defcomp >> <> div button textarea span
+            respo.comp.space :refer $ [] =<
+            reel.comp.reel :refer $ [] comp-reel
+            app.config :refer $ [] dev?
     'app.config $ %{} 'FileEntry
       :defs $ {}
         'dev? $ %{} 'CodeEntry (:doc |)
