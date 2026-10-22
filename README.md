@@ -58,7 +58,8 @@ It writes the original Map shape (`:states`, `:content`), so old data remains
 readable. Both legacy Maps and serialized typed Stores are validated on hydration;
 wrong field types are rejected rather than asserted valid. The storage key is
 not renamed and shared-origin key collisions are not solved by this migration.
-Set `?mode=dev` in the browser to see the typed Reel controls. No source change
+Set `?mode=dev`, then press Meta+Alt+Shift+K (⌘⌥⇧K on macOS) to open the typed
+Reel controls. No source change
 or successful preview authorizes production deployment; merging main retains the
 existing frontend-only COS/rsync behavior and requires separate approval.
 
