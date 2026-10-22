@@ -86,22 +86,19 @@
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             println "|Running mode:" $ if config/dev? |dev |release
+            match (js-ffi.browser/storage-get |workflow)
+              (:some raw)
+                try
+                  dispatch! $ :: :hydrate-storage $ parse-cirru-edn raw
+                  fn (message)
+                    hud! |error $ str |Storage-migration-failed: message
+                    raise message
+              (:none) &unit
             render-app!
             add-watch! *reel :changes $ fn (r p) (render-app!)
             listen-devtools! |k dispatch!
             js-ffi.browser/add-event-listener! |beforeunload $ fn (_) (persist-storage!)
             repeat! 60 persist-storage!
-            match (js-ffi.browser/storage-get |workflow)
-              (:some raw)
-                match (try-parse-cirru-edn raw)
-                  (:ok parsed)
-                    if
-                      or (map? parsed) (struct? parsed)
-                      try
-                        dispatch! $ :: :hydrate-storage parsed
-                        fn (message) (println |Storage-migration-failed: message)
-                  (:err message) (println |Storage-migration-failed: message)
-              (:none) &unit
             println "|App started."
             , &unit
           :examples $ []
@@ -161,6 +158,7 @@
             js-ffi.shared :as host
             respo.ffi.browser :as dom
             app.config :as config
+            |bottom-tip :default hud!
     'app.schema $ %{} 'FileEntry
       :defs $ {}
         'Op $ %{} 'CodeEntry (:doc |)
