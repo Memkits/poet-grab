@@ -17,9 +17,9 @@
                 states $ :states store
                 content $ :content store
               div
-                {} $ :style $ merge ui/global ui/row
+                {} $ :style $ .merge ui/global ui/row
                 textarea $ {} (:value content) (:placeholder |Content)
-                  :style $ merge ui/flex ui/textarea $ {} (:height 320)
+                  :style $ .merge ui/flex ui/textarea $ {} (:height 320)
                   :on-input $ fn (e d!)
                     d! $ Op :content $ decode-map-as
                       .unwrap $ get e :value
@@ -50,7 +50,7 @@
       :defs $ {}
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev?
-            = |dev $ option:unwrap-or (get-env |mode) |release
+            = |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
           :schema $ :: 'Bool
         'site $ %{} 'CodeEntry (:doc |)

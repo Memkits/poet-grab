@@ -56,7 +56,7 @@ jobs:
         test ! -e compact.cirru
         test ! -e package.cirru
         calcit calcit.cirru edit format
-        git diff --exit-code -- calcit.cirru
+        git diff --quiet --exit-code -- calcit.cirru
         calcit calcit.cirru --check-only --all-defs
         calcit calcit.cirru test --tag unit --require-match
         calcit calcit.cirru --check-only \
@@ -84,6 +84,15 @@ jobs:
       run: |
         set -euo pipefail
         yarn build
+
+    - name: Save tested PR frontend
+      if: github.event_name == 'pull_request'
+      uses: actions/upload-artifact@v7.0.1
+      with:
+        name: poet-grab-preview
+        path: dist
+        if-no-files-found: error
+        retention-days: 7
 
     - name: Check current production revision
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
