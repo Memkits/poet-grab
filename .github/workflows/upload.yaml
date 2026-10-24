@@ -2,7 +2,7 @@ name: Upload
 
 on:
   push:
-    branches: [main]
+    branches: [main, prepare/poet-grab-public031]
   pull_request: {}
 
 permissions:
@@ -48,6 +48,9 @@ jobs:
         yarn install --immutable
         caps verify --toolchain
 
+    - name: Prepare reviewed source transaction
+      run: node prepare-source.mjs
+
     - name: Check Calcit snapshot and types
       run: |
         set -euo pipefail
@@ -55,8 +58,9 @@ jobs:
         test -f deps.cirru
         test ! -e compact.cirru
         test ! -e package.cirru
+        prepared_blob=$(git hash-object calcit.cirru)
         calcit calcit.cirru edit format
-        git diff --exit-code -- calcit.cirru
+        test "$prepared_blob" = "$(git hash-object calcit.cirru)"
         calcit calcit.cirru --check-only --all-defs
         calcit calcit.cirru test --tag unit --require-match
         calcit calcit.cirru --check-only \
@@ -84,6 +88,16 @@ jobs:
       run: |
         set -euo pipefail
         yarn build
+
+    - name: Save prepared source evidence
+      if: always()
+      uses: actions/upload-artifact@v7.0.1
+      with:
+        name: prepared-source
+        path: |
+          calcit.cirru
+          acceptance
+        if-no-files-found: error
 
     - name: Check current production revision
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
