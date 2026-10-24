@@ -6,8 +6,10 @@ Poet grab(TODO...)
 
 ### 用户需要注意
 
-本轮升级到精确正式 Calcit/procs 0.30.1，配对正式 Respo 0.16.124、UI 0.8.0、
-Reel 0.6.41、js-ffi 0.2.5。请重启开发服务并完整刷新；UI 0.8 基础样式可能影响外观。
+保持精确正式 Calcit/procs 0.30.1，配对正式 Respo 0.16.126、UI 0.8.1、
+Reel 0.6.42、js-ffi 0.2.6。请重新严格解析依赖、重启开发服务并完整刷新，不混用旧模块缓存。
+两处样式合并调用头迁为 `.merge`，环境 Option 默认值调用头迁为 `.unwrap-or`；
+样式覆盖顺序、`release` 默认值、原两项测试、类型及所有存档/页面错误提示行为不变。
 原输入框、run 日志按钮、开发 Reel、`workflow` key 和 Map/Struct 存档合同保持。
 
 启动先恢复存档，再渲染和注册保存。解析或解码失败会调用 JS `hud!` 显示页面错误，
@@ -17,8 +19,8 @@ Reel 0.6.41、js-ffi 0.2.5。请重启开发服务并完整刷新；UI 0.8 基�
 ### Development
 
 Use paired formal Calcit/procs 0.30.1, Node.js 24, and Yarn 4.18.0.
-Calcit modules use formal tags: Respo 0.16.124, UI 0.8.0, Reel 0.6.41
-and JS-FFI 0.2.5.
+Calcit modules use formal tags: Respo 0.16.126, UI 0.8.1, Reel 0.6.42
+and JS-FFI 0.2.6.
 
 Keep `calcit.cirru` and `deps.cirru` as the canonical source and dependency
 files. Do not restore the retired `compact.cirru` or `package.cirru`; CI checks
