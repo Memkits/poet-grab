@@ -6,11 +6,11 @@ Poet grab(TODO...)
 
 ### 用户需要注意
 
-保持精确正式 Calcit/procs 0.30.1，配对正式 Respo 0.16.126、UI 0.8.1、
-Reel 0.6.42、js-ffi 0.2.6。请重新严格解析依赖、重启开发服务并完整刷新，不混用旧模块缓存。
-两处样式合并调用头迁为 `.merge`，环境 Option 默认值调用头迁为 `.unwrap-or`；
-样式覆盖顺序、`release` 默认值、原两项测试、类型及所有存档/页面错误提示行为不变。
-原输入框、run 日志按钮、开发 Reel、`workflow` key 和 Map/Struct 存档合同保持。
+配对正式 Calcit/procs 0.31.0，使用精确已发布 Respo 0.17.0-alpha.4、UI 0.9.0-alpha.4、Reel 0.7.0-alpha.4、js-ffi 0.2.7（传递 Router 0.9.0-alpha.3）。请重新严格解析完整依赖图、重启开发服务并刷新，不混用旧模块缓存；UI 库仍是 alpha 标签，不使用 hash 版本，不保证样式逐像素不变。
+
+本轮不改变输入框、run 日志按钮、Reel、`workflow` key、Map/Struct 存档或 HUD。dispatch 参数由 Dynamic 收紧为明确的 DispatchOp Enum 别名；UI slot 从仅业务 Op 修正为包含匿名 Reel 控制事件的真实入口，因此不是所有接口都变得更窄。原 enum? 守卫、Reel 控制解码及闭合业务 Op 解码保持，别名不引入新的名义身份，也不把业务模型改成开放 Enum。
+
+全部定义 189/189、公共定义 18/18、完整 strict（无诊断）、原两项测试、canonical、immutable 安装、Caps toolchain 与构建通过；独立只读评审无阻塞意见。隔离浏览器验证输入、run 实际日志、Reel 历史跳转/Step/Run、正常刷新恢复，控制台无新增 error/warn。坏存档保护及原 60 秒自动保存未在本轮重测，不用正常刷新替代异常存档验收；原测试和类型门禁未调整。
 
 启动先恢复存档，再渲染和注册保存。解析或解码失败会调用 JS `hud!` 显示页面错误，
 然后中断启动；不再吞掉错误后保存初始值。错误存档应先备份修复，不要清空浏览器数据。
@@ -18,9 +18,8 @@ Reel 0.6.42、js-ffi 0.2.6。请重新严格解析依赖、重启开发服务并
 
 ### Development
 
-Use paired formal Calcit/procs 0.30.1, Node.js 24, and Yarn 4.18.0.
-Calcit modules use formal tags: Respo 0.16.126, UI 0.8.1, Reel 0.6.42
-and JS-FFI 0.2.6.
+Use paired formal Calcit/procs 0.31.0, Node.js 24, and Yarn 4.18.0.
+Use the exact published module tags in deps.cirru; the Respo/UI/Reel tags are still alpha releases.
 
 Keep `calcit.cirru` and `deps.cirru` as the canonical source and dependency
 files. Do not restore the retired `compact.cirru` or `package.cirru`; CI checks
