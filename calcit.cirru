@@ -21,17 +21,20 @@
                 textarea $ {} (:value content) (:placeholder |Content)
                   :style $ .merge ui/flex ui/textarea $ {} (:height 320)
                   :on-input $ fn (e d!)
-                    d! $ Op :content $ decode-map-as
-                      .unwrap $ get e :value
-                      , 'String
-                =< |8px nil
+                    hint-fn $ Fn respo.schema/RespoEvent
+                      Fn AnyEnum $ -> Unit
+                      -> Unit
+                    d! $ Op :content $ decode-map-as (:value e) 'String
+                space-x |8px
                 div
                   {} $ :style ui/flex
                   <> "|This is some content with code"
-                  =< |8px nil
+                  space-x |8px
                   button $ {} (:style ui/button) (:inner-text |run)
                     :on-click $ fn (e d!) (println content)
-                when dev? $ comp-typed-reel (>> states :reel) reel $ {}
+                if dev?
+                  Option :some $ comp-typed-reel (>> states :reel) reel $ {}
+                  Option :none
           :examples $ []
           :schema $ quote $ Fn (reel.typed/State app.schema/Op app.schema/Store) (-> respo.schema/Component) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
@@ -40,7 +43,7 @@
             respo-ui.core :refer $ hsl
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> <> div button textarea span
-            respo.comp.space :refer $ =<
+            respo.comp.space :refer $ space-x
             reel.comp.reel :refer $ comp-typed-reel
             app.config :refer $ dev?
             app.schema :refer $ Op
@@ -153,27 +156,25 @@
           :doc "|Raw UI operation boundary for business events and anonymous Reel controls; dispatch! validates controls and decodes closed Op values."
           :code $ quote $ def DispatchOp (:: :unhandled)
           :examples $ []
-          :schema $ quote Enum
+          :schema $ quote AnyEnum
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op
-            :states
-              quote $ List Dynamic
-              , 'Dynamic
-            :content 'String
-            :hydrate-storage 'Store
-            :unknown 'Enum
+            :states (List respo.schema/CoordKey) Dynamic
+            :content String
+            :hydrate-storage Store
+            :unknown AnyEnum
             :reel/toggle
-            :reel/recall 'Number
+            :reel/recall Number
             :reel/run
             :reel/step
             :reel/merge
             :reel/reset
-            :reel/remove 'Number
+            :reel/remove Number
           :examples $ []
           :schema $ quote EnumDef
         'Store $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct Store (:content 'String)
-            :states $ quote $ Map Dynamic Dynamic
+          :code $ quote $ defstruct Store (:content String)
+            :states $ Map Dynamic Dynamic
           :examples $ []
           :schema $ quote StructDef
         'decode-op $ %{} 'CodeEntry (:doc |)
@@ -181,7 +182,7 @@
             match op
               (:states cursor data)
                 Op :states
-                  decode-map-as cursor $ :: 'List 'Dynamic
+                  decode-map-as cursor $ List respo.schema/CoordKey
                   , data
               (:content value)
                 Op :content $ decode-map-as value 'String
@@ -189,7 +190,7 @@
                 Op :hydrate-storage $ decode-store data
               _ $ Op :unknown op
           :examples $ []
-          :schema $ quote $ Fn Enum (-> app.schema/Op)
+          :schema $ quote $ Fn AnyEnum (-> app.schema/Op)
         'decode-store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-store (raw)
             decode-map-as
@@ -212,7 +213,7 @@
               (:states cursor data)
                 assoc store :states $ decode-map-as
                   assoc-in (:states store) (conj cursor :data) data
-                  :: 'Map 'Dynamic 'Dynamic
+                  Map Dynamic Dynamic
               (:content value) (assoc store :content value)
               (:hydrate-storage data) data
               (:unknown original)
