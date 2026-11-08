@@ -6,7 +6,7 @@
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |respo-ui.calcit/ |reel.calcit/ |js-ffi/
-      :type-slots $ {} $ :dispatch-op |app.schema/DispatchOp
+      :type-slots $ {} $ :dispatch-op 'app.schema/DispatchOp
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {} $ 'comp-container
@@ -22,7 +22,7 @@
                   :style $ .merge ui/flex ui/textarea $ {} (:height 320)
                   :on-input $ fn (e d!)
                     hint-fn $ Fn respo.schema/RespoEvent
-                      Fn AnyEnum $ -> Unit
+                      Fn app.schema/Op $ -> Unit
                       -> Unit
                     d! $ Op :content $ decode-map-as (:value e) 'String
                 space-x |8px
@@ -74,10 +74,10 @@
                 (:some control)
                   reset! *reel $ typed/apply-control updater @*reel control
                 (:none)
-                  let
-                      op-id $ generate-id!
-                      op-time $ host/now-ms
-                    reset! *reel $ typed/record-op updater @*reel (schema/decode-op op) op-id op-time
+                  match (schema/decode-op op)
+                    (:some action)
+                      reset! *reel $ typed/record-op updater @*reel action (generate-id!) (host/now-ms)
+                    (:none) &unit
               raise |Expected-Enum-operation
             , &unit
           :examples $ []
@@ -125,7 +125,9 @@
           :schema $ quote $ Fn (-> Unit)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
-            render! mount-target (comp-container @*reel) dispatch!
+            render-with! mount-target
+              fn () $ comp-container @*reel
+              , dispatch!
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'repeat! $ %{} 'CodeEntry (:doc |)
@@ -140,7 +142,7 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
-            respo.core :refer $ render! clear-cache!
+            respo.core :refer $ render-with! clear-cache!
             app.comp.container :refer $ comp-container
             app.updater :refer $ updater
             app.schema :as schema
@@ -162,14 +164,6 @@
             :states (List respo.schema/CoordKey) Dynamic
             :content String
             :hydrate-storage Store
-            :unknown AnyEnum
-            :reel/toggle
-            :reel/recall Number
-            :reel/run
-            :reel/step
-            :reel/merge
-            :reel/reset
-            :reel/remove Number
           :examples $ []
           :schema $ quote EnumDef
         'Store $ %{} 'CodeEntry (:doc |)
@@ -181,23 +175,24 @@
           :code $ quote $ defn decode-op (op)
             match op
               (:states cursor data)
-                Op :states
+                Option :some $ Op :states
                   decode-map-as cursor $ List respo.schema/CoordKey
                   , data
               (:content value)
-                Op :content $ decode-map-as value 'String
+                Option :some $ Op :content $ decode-map-as value 'String
               (:hydrate-storage data)
-                Op :hydrate-storage $ decode-store data
-              _ $ Op :unknown op
+                Option :some $ Op :hydrate-storage $ decode-store data
+              _ $ do (println "|Unknown op:" op) (Option :none)
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> app.schema/Op)
+          :schema $ quote $ Fn AnyEnum
+            -> $ Option app.schema/Op
         'decode-store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-store (raw)
             decode-map-as
               if (struct? raw) (&struct:to-map raw) raw
               , Store
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/Store)
+          :schema $ quote $ Fn Input (-> app.schema/Store) (:generics Input)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :content | :states $ {}
@@ -216,9 +211,6 @@
                   Map Dynamic Dynamic
               (:content value) (assoc store :content value)
               (:hydrate-storage data) data
-              (:unknown original)
-                do (println "|Unknown op:" original) store
-              _ $ do (println "|Unknown op:" op) store
           :examples $ []
           :schema $ quote $ Fn app.schema/Store app.schema/Op String Number (-> app.schema/Store)
           :tests $ []
