@@ -163,7 +163,7 @@
           :schema $ quote EnumDef
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store (:content String)
-            :states $ Map Dynamic Dynamic
+            :states $ Map respo.schema/CoordKey Dynamic
           :examples $ []
           :schema $ quote StructDef
         'decode-store $ %{} 'CodeEntry (:doc |)
@@ -188,7 +188,7 @@
               (:states cursor data)
                 assoc store :states $ decode-map-as
                   assoc-in (:states store) (conj cursor :data) data
-                  Map Dynamic Dynamic
+                  Map respo.schema/CoordKey Dynamic
               (:content value) (assoc store :content value)
               (:hydrate-storage data) data
           :examples $ []
