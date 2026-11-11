@@ -5,15 +5,15 @@ Poet Grab
 
 ### 用户需要注意
 
-开发与 CI 配对正式 Calcit / procs **0.40.0**。直接依赖为 Respo 0.19.5、UI 0.15.2、js-ffi 0.2.13 和 Reel 0.11.0，传递依赖为 Router 0.12.2。升级后重新严格解析依赖、重启开发服务并刷新。
+开发与 CI 配对正式 Calcit / procs **0.41.0**。直接依赖为 Respo 0.19.5、UI 0.15.2、js-ffi 0.2.13 和 Reel 0.11.0，传递依赖为 Router 0.12.2。升级后重新严格解析依赖、重启开发服务并刷新。
 
-文本输入发送具体 Op，组件状态路径按 CoordKey union 校验。业务视图直接派发具体 Op，Reel 面板与快捷键通过独立回调传递具体 Control。开发面板在同一 memo 帧内构造和渲染。
+文本输入发送具体 Op，恢复存档时按 CoordKey union 校验组件状态键。业务视图直接派发具体 Op，Reel 面板与快捷键通过独立回调传递具体 Control。开发面板在同一 memo 帧内构造和渲染。
 
 存储仍使用 `workflow` key，先恢复成功，再渲染和注册保存。解析或解码失败时，JS `hud!` 显示页面错误，随后中断启动；错误存档应先备份修复，不要清空浏览器数据。保留原 60 秒与 beforeunload 保存，继续写入 `:states` / `:content` Map 形状；legacy Map 和序列化 Store 都经过校验，未解决同来源 key 冲突。
 
 ### 开发与验证
 
-使用 Calcit 0.40.0、Node.js 24、Yarn 4.18.0。npm 新解析版本等待 60 分钟，无单包豁免；已有锁定版本不重新计算等待时间。
+使用 Calcit 0.41.0、Node.js 24、Yarn 4.18.0。npm 新解析版本等待 60 分钟，无单包豁免；已有锁定版本不重新计算等待时间。
 
 ```bash
 caps --strict --ci
