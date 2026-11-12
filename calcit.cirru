@@ -22,7 +22,7 @@
                   :style $ .merge ui/flex ui/textarea $ {} (:height 320)
                   :on-input $ fn (e d!)
                     hint-fn $ Fn respo.schema/RespoEvent
-                      Fn app.schema/Op $ -> Unit
+                      Fn Op $ -> Unit
                       -> Unit
                     d! $ Op :content $ decode-map-as (:value e) 'String
                 space-x |8px
