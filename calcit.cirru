@@ -37,9 +37,9 @@
                   , None
           :examples $ []
           :schema $ quote $ Fn (reel.typed/State Op app.schema/Store)
-            Fn reel.typed/Control $ -> Unit
+            Fn reel.typed/Control (-> Unit) (:features :state)
             -> respo.schema/Component
-            :features :io :js-ffi
+            :features :io :js-ffi :state
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require
@@ -136,9 +136,9 @@
             , &unit
           :examples $ []
           :schema $ quote $ Fn Number
-            Fn $ -> Unit
+            Fn (-> Unit) (:features :state)
             -> Unit
-            :features :js-ffi
+            :features :js-ffi :state
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
